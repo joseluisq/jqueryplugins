@@ -1,0 +1,21 @@
+.jlloader.jlloader-container {position:fixed;  font-family: Arial, Helvetica, sans-serif;}
+.jlloader.jlloader-container .jlloader-countdown{position:absolute; width:25px; margin-left:305px; margin-top:5px; font-size:10px; color:#555; text-align:center;}
+
+.jlloader .jll-01{ background:url(images/esq_left.png) no-repeat; width:4px; height:4px; }
+.jlloader .jll-02{ background:url(images/middle_top.png) repeat-x; width:auto; height:4px; }
+.jlloader .jll-03{ background:url(images/esq_right.png) no-repeat; width:4px; height:4px; }
+
+.jlloader .jll-04{ background:url(images/middle_left.png) repeat-y; width:4px; height:auto; }
+.jlloader .jll-05{ background:#FFF; width:inherit; vertical-align:top; }
+.jlloader .jll-06{ background:url(images/middle_right.png) repeat-y; width:4px; height:auto; }
+
+.jlloader .jll-07{ background:url(images/esq_left_foot.png) no-repeat; width:4px; height:4px; }
+.jlloader .jll-08{ background:url(images/middle_foot.png) repeat-x; width:auto; height:4px; }
+.jlloader .jll-09{ background:url(images/esq_right_foot.png) no-repeat; width:4px; height:4px; }
+
+.jlloader.jlloader-overlay{position:fixed; width:100%; height:100%; display:block; background:#000000; outline:0;}
+.jlloader.jlloader-container .jlloader-middle{ display:block; padding:13px 17px 7px 17px;}
+.jlloader.jlloader-container .jlloader-middle .jlloader-icon{width:20px; height:20px; vertical-align:top; background:#CCC; display:inline-block; margin-right:0px;}
+.jlloader.jlloader-container .jlloader-middle .jlloader-icon.loader{background:url(images/loading.gif) no-repeat;}
+.jlloader.jlloader-container .jlloader-middle .jlloader-text{width:auto; height:auto; vertical-align:top; background:#fff; display:inline-block; margin-left:0px; font-size:12px; vertical-align:top; font-weight:bold; }
+.jlloader.jlloader-container .jlloader-middle .jlloader-text .jlloader-description{font-weight:bold; clear:both; }
