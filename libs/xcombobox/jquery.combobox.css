@@ -1,0 +1,8 @@
+.xdropdownbox{ }
+.xdropdownbox .xlistheader{ list-style-type: none; margin: 0; padding: 0; }
+.xdropdownbox .xlistheader li{ padding: 3px; }
+.xdropdownbox .xlist{ position: absolute; display: none; border: solid #ccc 1px; }
+.xdropdownbox .xlist ul{ list-style-type: none; margin: 0; padding: 0; background: #fff; }
+.xdropdownbox .xlist ul li{ padding: 3px; }
+.xdropdownbox .xlist ul li:hover,
+.xdropdownbox .xlist ul li.selected{ background: #212025; color: #fff; }
