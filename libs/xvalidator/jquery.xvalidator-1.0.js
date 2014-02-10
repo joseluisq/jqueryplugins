@@ -1,15 +1,16 @@
 /*
- * xValidator 1.1 for LBN - jQuery plugin
- * Copyright 2011, Jose Luis Quintana <joseluismegateam@gmail.com>
+ * xValidator 1.1.1
+ * Copyright 2014, Jose Luis Quintana <joseluisquintana20@gmail.com>
  * Dual licensed under the MIT or GPL Version 2 licenses.
  * Built for jQuery library
  * http://jquery.com
  * 
  * Date: Wed Feb 22 11:34:10 2012 -0500
  */
-(function ($) {
+(function($) {
+    var that;
     var methods = {
-        xvalidator: function (options) {
+        xvalidator: function(options) {
             this.bind("submit.xvalidator", methods._submit);
             this.data("xvalidator", {
                 form: this,
@@ -18,19 +19,20 @@
             for (var element in options.fields) {
                 methods.addValidation.apply(this, [element, options.fields[element]])
             }
-            return this
+            return that = this;
         },
-        valid: function () {
+        valid: function() {
             var k = $(this).data("xvalidator"),
-            h = null,
-            i = null,
-            g = true;
+                    h = null,
+                    i = null,
+                    g = true;
             for (var e in k.options.fields) {
                 if (k.options.fields[e]["disabled"]) {
                     continue
                 }
                 i = $("#" + e, this);
                 var j = k.options.fields[e];
+
                 if (i.hasClass("xcombobox")) {
                     h = methods._validator(this, i, i.xcombobox("getValue"), k.options, j, true)
                 } else {
@@ -48,11 +50,11 @@
             }
             return g
         },
-        isValid: function () {
+        isValid: function() {
             var k = $(this).data("xvalidator"),
-            h = null,
-            i = null,
-            g = true;
+                    h = null,
+                    i = null,
+                    g = true;
             for (var e in k.options.fields) {
                 if (k.options.fields[e]["disabled"]) {
                     continue;
@@ -73,7 +75,7 @@
             }
             return g;
         },
-        _submit: function (e) {
+        _submit: function(e) {
             var g = $(this).data("xvalidator");
             if (!g.options.submit) {
                 e.preventDefault()
@@ -88,7 +90,7 @@
                 return false
             }
         },
-        disabledField: function (field, i) {
+        disabledField: function(field, i) {
             var h = this.data("xvalidator");
             if (h) {
                 try {
@@ -99,20 +101,20 @@
                 }
             }
         },
-        addValidation: function (tag, options) {
+        addValidation: function(tag, options) {
             var e = this, data = this.data("xvalidator");
-            
+
             if (data) {
                 var element = $("#" + tag, this);
-                
+
                 if (element.hasClass("xcombobox")) {
                     data.options.fields[tag] = options;
                     this.data("xvalidator", data);
-                    
+
                     element.bind("onSelectedItem", {
                         opt: data.options,
                         o: options
-                    }, function (event, elem) {
+                    }, function(event, elem) {
                         var d = methods._validator(e, $(this), elem.value, event.data.opt, event.data.o, true);
                         if (d == "ok") {
                             event.data.opt.onValid.apply(e, [$(this)])
@@ -124,11 +126,11 @@
                     if (element.is("input,textarea,select")) {
                         data.options.fields[tag] = options;
                         this.data("xvalidator", data);
-                        
+
                         element.bind("keyup", {
                             opt: data.options,
                             o: options
-                        }, function (event) {
+                        }, function(event) {
                             if (!(/(9|13|16|17|18|27|37|38|39|40|93)$/).test(event.which)) {
                                 var d = methods._validator(e, $(this), $(this).val(), event.data.opt, event.data.o, false);
                                 if (d == "ok") {
@@ -144,14 +146,14 @@
                                 }
                             }
                         });
-                        
+
                         if (options.label && element.is("input[type=text],input[type=password],textarea")) {
                             element.val(options.label);
-                            element.bind("focus", options.label, function (event) {
+                            element.bind("focus", options.label, function(event) {
                                 if (event.data == $(this).val()) {
                                     $(this).val("")
                                 }
-                            }).bind("blur", options.label, function (d) {
+                            }).bind("blur", options.label, function(d) {
                                 if (methods.isEmpty($(this).val())) {
                                     $(this).val(d.data)
                                 }
@@ -161,7 +163,7 @@
                             })
                         } else {
                             if (data.options.tooltip) {
-                                element.bind("blur", function () {
+                                element.bind("blur", function() {
                                     $(".xtooltip", e).remove()
                                 })
                             }
@@ -170,7 +172,7 @@
                 }
             }
         },
-        removeValidation: function (g) {
+        removeValidation: function(g) {
             var h = this.data("xvalidator");
             if (h) {
                 var e = $("#" + g, this);
@@ -187,7 +189,11 @@
                 }
             }
         },
-        _validator: function (g, i, h, e, d, s) {
+        _validator: function(g, i, h, e, d, s) {
+            if (!d.rule['required'] && h == '') {
+                return 'ok';
+            }
+
             for (var f in d.rule) {
                 switch (f.toLowerCase()) {
                     case "required":
@@ -284,12 +290,15 @@
                         break
                 }
             }
+
             return "ok"
         },
-        _showTooltip: function (h, i, e, g, s) {
+        _showTooltip: function(h, i, e, g, s) {
             i.focus();
-            if (e.errorClass) {
-                i.addClass(e.errorClass)
+            if (e.errorClass && !i.hasClass(e.errorClass)) {
+                methods._clear.apply(that, [false]);
+
+                i.addClass(e.errorClass);
             }
             if (s && e.tooltip) {
                 var d = null;
@@ -314,74 +323,82 @@
             }
             return i
         },
-        _buildTooltip: function (e, d) {
+        _buildTooltip: function(e, d) {
             return $("<div/>").attr("lang", e.attr("id")).addClass("xvalidator").addClass("xtooltip").css({
                 position: "absolute"
             }).hide().append($("<span/>").addClass("xcorner")).append($("<span/>").addClass("xtext").html(d))
         },
-        _moveScroll: function (d, e) {
+        _moveScroll: function(d, e) {
             $("html:not(:animated),body:not(:animated)").animate({
                 scrollTop: Number(d.offset().top) - (e ? e : 0)
             }, 500)
         },
-        reset: function () {
+        reset: function() {
             var e = this.data("xvalidator").options;
+
             if (e.tooltip) {
-                $(".xtooltip", this).remove()
+                $(".xtooltip", this).remove();
             }
+
+            methods._clear.apply(this, [true]);
+        },
+        _clear: function(reset) {
+            var e = this.data("xvalidator").options;
             for (var d in e.fields) {
                 if (e.errorClass) {
-                    $("#" + d, this).removeClass(e.errorClass)
+                    $("#" + d, this).removeClass(e.errorClass);
                 }
-                $("#" + d, this).val(e.fields[d].label)
+                if (reset) {
+                    $("#" + d, this).val(e.fields[d].label);
+                }
             }
         },
-        removeTooltips: function () {
+        removeTooltips: function() {
             var e = this.data("xvalidator").options;
             if (e.tooltip) {
                 $(".xtooltip", this).remove();
             }
         },
-        isEmpty: function (d) {
+        isEmpty: function(d) {
             return (d == null || d.length == 0 || /^\s+$/.test(d))
         },
-        isEmail: function (d) {
+        isEmail: function(d) {
             return (/\w{1,}[@][\w\-]{1,}([.]([\w\-]{2,})){1,3}$/).test(d)
         },
-        isURL: function (d) {
+        isURL: function(d) {
             return (/[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi).test(d)
         },
-        isNumeric: function (d) {
+        isNumeric: function(d) {
             return /^-?(0|[1-9]\d*|(?=\.))(\.\d+)?$/.test(d)
         },
-        isInteger: function (d) {
+        isInteger: function(d) {
             return (/^-?[0-9]+$/).test(d)
         },
-        isDecimal: function (d) {
+        isDecimal: function(d) {
             return (/^-?[0-9]+\.[0-9]{1,}$/).test(d)
         },
-        isNegative: function (d) {
+        isNegative: function(d) {
             return (/^-[0-9]+(\.[0-9]{1,})?$/).test(d)
         },
-        isAlphaNumeric: function (d) {
+        isAlphaNumeric: function(d) {
             return (/^[0-9a-z-A-Z]+$/).test(d)
         },
-        isAlphabetic: function (d) {
+        isAlphabetic: function(d) {
             return (/^[a-zA-Z]+$/).test(d)
         },
-        isMajor: function (e, d) {
+        isMajor: function(e, d) {
             return (methods.isNumeric(e)) ? (Number(e) > d ? true : false) : false
         },
-        isMinor: function (e, d) {
+        isMinor: function(e, d) {
             return (methods.isNumeric(e)) ? (Number(e) < d ? true : false) : false
         },
-        isMax: function (e, d) {
+        isMax: function(e, d) {
             return (methods.isNumeric(e)) ? (Number(e) < d ? true : false) : false
         },
-        isMin: function (e, d) {
+        isMin: function(e, d) {
             return (methods.isNumeric(e)) ? (Number(e) > d ? true : false) : false
         },
-        equalTo: function (e, d) {
+        equalTo: function(e, d) {
             return !!(e === d)
         }
     };
@@ -393,17 +410,21 @@
         message: false,
         errorClass: null,
         submit: false,
-        onSubmit: function () {},
-        onSuccess: function () {},
-        onValid: function () {},
-        onInvalid: function () {}
+        onSubmit: function() {
+        },
+        onSuccess: function() {
+        },
+        onValid: function() {
+        },
+        onInvalid: function() {
+        }
     };
 
-    $.fn.xvalidator = function (options) {
+    $.fn.xvalidator = function(options) {
         if (options && typeof (options) === "object") {
             options = $.extend({}, defaults, options)
         }
-        
+
         if (typeof (options) == "string" && methods[options]) {
             return methods[options].apply(this, Array.prototype.slice.call(arguments, 1))
         } else {
@@ -413,5 +434,5 @@
                 $.error("Method " + options + " does not exist on jQuery.xvalidator")
             }
         }
-    }
+    };
 })(jQuery);
