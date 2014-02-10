@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Demo xValidator</title>
+
+        <style>
+            h1 {
+                text-align: center;
+            }
+            form {
+                width: 180px;
+                margin: 5% auto 0 auto;
+            }
+
+            .error {
+                background-color: #FFEAEE;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Demo Simple xValidator</h1>
+        <form id="myform" action="action">
+            <div>
+                Fullname:<br>
+                <input type="text" value="" name="txtfullname" id="txtfullname">
+            </div>
+
+            <div>
+                URL:<br>
+                <input type="text" value="" name="txturl" id="txturl">
+            </div>
+
+            <div>
+                Email:<br>
+                <input type="text" value="" name="txtemail" id="txtemail">
+            </div>
+
+            <div>
+                Countries:<br>
+                <select name="cbocountries" id="cbocountries">
+                    <option value="">Select your country</option>
+                    <option value="1">Argentina</option>
+                    <option value="2">Brasil</option>
+                    <option value="3">Chile</option>
+                    <option value="4">Peru</option>
+                    <option value="5">Venezuela</option>
+                    <option value="6">Uruguay</option>
+                </select>
+            </div>
+
+            <p>
+                <button type="submit">Enviar</button>
+            </p>
+            <div id="msg"></div>
+        </form>
+
+        
+        <script src="jquery-1.11.0.min.js"></script>
+        <script src="jquery.xvalidator-1.0.js"></script>
+        <script type="text/javascript">
+            $(function() {
+                var myform = $('#myform'), msg = $('#msg');
+
+                myform.xvalidator({
+                    fields: {
+                        'txtfullname': {
+                            rule: {
+                                required: true
+                            },
+                            message: 'Enter your fullname'
+                        },
+                        'txturl': {
+                            rule: {
+//                                required: true, Can be optional
+                                url: true
+                            },
+                            message: 'Enter your site url'
+                        },
+                        'txtemail': {
+                            rule: {
+                                required: true,
+                                email: true
+                            },
+                            message: 'Enter your email address'
+                        },
+                        'cbocountries': {
+                            rule: {
+                                required: true
+                            },
+                            message: 'Select your country'
+                        }
+                    },
+                    tooltip: false,
+                    scrollingAuto: true,
+                    message: false,
+                    errorClass: 'error',
+                    submit: false,
+                    onSubmit: function() {
+
+                    },
+                    onSuccess: function() {
+                        msg.text('Validation form is OK!');
+                    },
+                    onValid: function() {
+                    },
+                    onInvalid: function() {
+                        msg.text('');
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>
